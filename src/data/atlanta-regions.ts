@@ -11,7 +11,7 @@ export const atlantaRegions: Region[] = [
     zipCodes: ["30060", "30062", "30064", "30066", "30067", "30068"],
   },
   {
-    city: "Alpharetta",
+    city: "Alpharetta / Milton",
     slug: "alpharetta",
     zipCodes: ["30004", "30005", "30009", "30022", "30023"],
   },
@@ -26,12 +26,12 @@ export const atlantaRegions: Region[] = [
     zipCodes: ["30328", "30350", "30358"],
   },
   {
-    city: "Lawrenceville",
+    city: "Lawrenceville / Gwinnett",
     slug: "lawrenceville",
     zipCodes: ["30043", "30044", "30045", "30046"],
   },
   {
-    city: "Smyrna",
+    city: "Smyrna / Vinings",
     slug: "smyrna",
     zipCodes: ["30080", "30081", "30082"],
   }
