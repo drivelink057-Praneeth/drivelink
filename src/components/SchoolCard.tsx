@@ -1,15 +1,17 @@
-import { Star, BadgeCheck, MapPin, DollarSign } from "lucide-react";
+import { Star, BadgeCheck, MapPin, DollarSign, Truck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { School } from "@/data/mockData";
+import type { ExternalSchool } from "@/lib/externalSupabase";
+import { hasPickupDropoff } from "@/lib/externalSupabase";
 
 interface SchoolCardProps {
-  school: School;
+  school: ExternalSchool;
+  lowestPrice?: number;
   index?: number;
 }
 
-const SchoolCard = ({ school, index = 0 }: SchoolCardProps) => (
+const SchoolCard = ({ school, lowestPrice, index = 0 }: SchoolCardProps) => (
   <div
     className="group overflow-hidden rounded-xl border bg-card shadow-sm transition-all hover:shadow-md"
     style={{ animationDelay: `${index * 80}ms` }}
@@ -32,19 +34,23 @@ const SchoolCard = ({ school, index = 0 }: SchoolCardProps) => (
               <MapPin className="h-3.5 w-3.5" />
               {school.zip_code}
             </span>
-            <span className="flex items-center gap-1">
-              <Star className="h-3.5 w-3.5 fill-accent text-accent" />
-              {school.rating} ({school.review_count})
-            </span>
+            {school.rating != null && (
+              <span className="flex items-center gap-1">
+                <Star className="h-3.5 w-3.5 fill-accent text-accent" />
+                {school.rating} ({school.review_count ?? 0})
+              </span>
+            )}
           </div>
         </div>
-        <div className="flex flex-col items-end">
-          <div className="flex items-center gap-0.5 font-heading text-2xl font-bold text-foreground">
-            <DollarSign className="h-5 w-5" />
-            {school.hourly_rate}
+        {lowestPrice != null && (
+          <div className="flex flex-col items-end">
+            <div className="flex items-center gap-0.5 font-heading text-2xl font-bold text-foreground">
+              <DollarSign className="h-5 w-5" />
+              {lowestPrice}
+            </div>
+            <span className="text-xs text-muted-foreground">from</span>
           </div>
-          <span className="text-xs text-muted-foreground">/hour</span>
-        </div>
+        )}
       </div>
 
       <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">
@@ -52,14 +58,17 @@ const SchoolCard = ({ school, index = 0 }: SchoolCardProps) => (
       </p>
 
       <div className="mt-4 flex flex-wrap gap-1.5">
-        {school.lesson_types.map((type) => (
-          <Badge key={type} variant="secondary" className="text-xs capitalize">
-            {type} Lessons
+        {hasPickupDropoff(school) && (
+          <Badge className="bg-accent/15 text-accent border-accent/30 text-xs gap-1">
+            <Truck className="h-3 w-3" />
+            Pickup / Drop-off
           </Badge>
-        ))}
-        <Badge variant="outline" className="text-xs capitalize">
-          {school.car_type}
-        </Badge>
+        )}
+        {school.dds_license_number && (
+          <Badge variant="outline" className="text-xs">
+            DDS Licensed
+          </Badge>
+        )}
       </div>
 
       <div className="mt-4">
