@@ -1,27 +1,42 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import { BadgeCheck, Star, MapPin, Phone, Mail, Car, Clock, DollarSign, X, ChevronLeft } from "lucide-react";
+import { BadgeCheck, Star, MapPin, Phone, Mail, Clock, DollarSign, ChevronLeft, Truck, Package, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { mockSchools, generateAvailability, type TimeSlot } from "@/data/mockData";
+import { useSchool, usePackages } from "@/hooks/useSchools";
+import { hasPickupDropoff } from "@/lib/externalSupabase";
+import { generateAvailability, type TimeSlot } from "@/data/mockData";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const PLATFORM_FEE = 15;
 
 const SchoolProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const school = mockSchools.find((s) => s.id === id);
+  const { data: school, isLoading } = useSchool(id);
+  const { data: packages = [] } = usePackages(id);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
 
-  const availability = useMemo(() => (school ? generateAvailability(school.id) : []), [school]);
+  const availability = useMemo(() => (id ? generateAvailability(id) : []), [id]);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <Navbar />
+        <div className="flex flex-1 items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      </div>
+    );
+  }
 
   if (!school) {
     return (
@@ -34,19 +49,17 @@ const SchoolProfile = () => {
     );
   }
 
+  const lowestPrice = packages.length > 0 ? Math.min(...packages.map((p) => p.price)) : null;
+
   const slotsForDate = selectedDate
     ? availability.filter((s) => {
         const slotDate = new Date(s.start_time);
-        return (
-          slotDate.toDateString() === selectedDate.toDateString() && !s.is_booked
-        );
+        return slotDate.toDateString() === selectedDate.toDateString() && !s.is_booked;
       })
     : [];
 
   const datesWithSlots = new Set(
-    availability
-      .filter((s) => !s.is_booked)
-      .map((s) => new Date(s.start_time).toDateString())
+    availability.filter((s) => !s.is_booked).map((s) => new Date(s.start_time).toDateString())
   );
 
   const handleBookSlot = (slot: TimeSlot) => {
@@ -75,29 +88,39 @@ const SchoolProfile = () => {
                   <h1 className="font-heading text-3xl font-bold text-primary-foreground">
                     {school.business_name}
                   </h1>
-                  {school.is_verified && (
-                    <BadgeCheck className="h-6 w-6 text-accent" />
+                  {school.is_verified && <BadgeCheck className="h-6 w-6 text-accent" />}
+                  {hasPickupDropoff(school) && (
+                    <Badge className="bg-accent/20 text-accent border-accent/40 gap-1">
+                      <Truck className="h-3.5 w-3.5" />
+                      Pickup / Drop-off
+                    </Badge>
                   )}
                 </div>
                 <div className="mt-2 flex flex-wrap items-center gap-4 text-sm text-primary-foreground/70">
-                  <span className="flex items-center gap-1">
-                    <Star className="h-4 w-4 fill-accent text-accent" />
-                    {school.rating} ({school.review_count} reviews)
-                  </span>
+                  {school.rating != null && (
+                    <span className="flex items-center gap-1">
+                      <Star className="h-4 w-4 fill-accent text-accent" />
+                      {school.rating} ({school.review_count ?? 0} reviews)
+                    </span>
+                  )}
                   <span className="flex items-center gap-1">
                     <MapPin className="h-4 w-4" />
                     {school.zip_code}
                   </span>
-                  <span className="flex items-center gap-1">
-                    <DollarSign className="h-4 w-4" />
-                    ${school.hourly_rate}/hr
-                  </span>
+                  {lowestPrice != null && (
+                    <span className="flex items-center gap-1">
+                      <DollarSign className="h-4 w-4" />
+                      From ${lowestPrice}
+                    </span>
+                  )}
                 </div>
               </div>
-              <div className="font-heading text-4xl font-bold text-accent">
-                ${school.hourly_rate}
-                <span className="text-lg font-normal text-primary-foreground/50">/hr</span>
-              </div>
+              {lowestPrice != null && (
+                <div className="font-heading text-4xl font-bold text-accent">
+                  ${lowestPrice}
+                  <span className="text-lg font-normal text-primary-foreground/50"> from</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -114,37 +137,62 @@ const SchoolProfile = () => {
               <section>
                 <h2 className="font-heading text-xl font-semibold text-foreground">Credentials</h2>
                 <div className="mt-3 space-y-2 text-sm">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Badge variant="outline">DDS License</Badge>
-                    {school.dds_license_number}
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {school.lesson_types.map((t) => (
-                      <Badge key={t} className="bg-accent/10 text-accent capitalize">{t} Lessons</Badge>
+                  {school.dds_license_number && (
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Badge variant="outline">DDS License</Badge>
+                      {school.dds_license_number}
+                    </div>
+                  )}
+                </div>
+              </section>
+
+              {/* Packages */}
+              {packages.length > 0 && (
+                <section>
+                  <h2 className="font-heading text-xl font-semibold text-foreground">Packages</h2>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    {packages.map((pkg) => (
+                      <div key={pkg.id} className="rounded-lg border bg-card p-4">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-center gap-2">
+                            <Package className="h-5 w-5 text-accent shrink-0" />
+                            <h4 className="font-heading text-sm font-semibold text-foreground">
+                              {pkg.title}
+                            </h4>
+                          </div>
+                          <span className="font-heading text-lg font-bold text-foreground">
+                            ${pkg.price}
+                          </span>
+                        </div>
+                        <p className="mt-2 text-xs text-muted-foreground">{pkg.description}</p>
+                        <div className="mt-2 flex gap-2 text-xs text-muted-foreground">
+                          {pkg.hours_classroom > 0 && (
+                            <span>{pkg.hours_classroom}h classroom</span>
+                          )}
+                          {pkg.hours_behind_wheel > 0 && (
+                            <span>{pkg.hours_behind_wheel}h behind-the-wheel</span>
+                          )}
+                        </div>
+                      </div>
                     ))}
                   </div>
-                </div>
-              </section>
+                </section>
+              )}
 
-              <section>
-                <h2 className="font-heading text-xl font-semibold text-foreground">Vehicles</h2>
-                <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                  {school.vehicles.map((v) => (
-                    <div key={v} className="flex items-center gap-3 rounded-lg border bg-card p-4">
-                      <Car className="h-5 w-5 text-accent" />
-                      <span className="text-sm text-foreground">{v}</span>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              <section>
-                <h2 className="font-heading text-xl font-semibold text-foreground">Contact</h2>
-                <div className="mt-3 space-y-2 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2"><Phone className="h-4 w-4" /> {school.phone}</div>
-                  <div className="flex items-center gap-2"><Mail className="h-4 w-4" /> {school.email}</div>
-                </div>
-              </section>
+              {/* Contact */}
+              {(school.phone || school.email) && (
+                <section>
+                  <h2 className="font-heading text-xl font-semibold text-foreground">Contact</h2>
+                  <div className="mt-3 space-y-2 text-sm text-muted-foreground">
+                    {school.phone && (
+                      <div className="flex items-center gap-2"><Phone className="h-4 w-4" /> {school.phone}</div>
+                    )}
+                    {school.email && (
+                      <div className="flex items-center gap-2"><Mail className="h-4 w-4" /> {school.email}</div>
+                    )}
+                  </div>
+                </section>
+              )}
             </div>
 
             {/* Right: Booking Calendar */}
@@ -200,7 +248,7 @@ const SchoolProfile = () => {
           <DialogHeader>
             <DialogTitle className="font-heading">Confirm Your Booking</DialogTitle>
           </DialogHeader>
-          {selectedSlot && (
+          {selectedSlot && lowestPrice != null && (
             <div className="space-y-4">
               <div className="rounded-lg bg-secondary p-4">
                 <p className="font-heading font-semibold text-foreground">{school.business_name}</p>
@@ -208,7 +256,8 @@ const SchoolProfile = () => {
                   {format(new Date(selectedSlot.start_time), "EEEE, MMMM d, yyyy")}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {format(new Date(selectedSlot.start_time), "h:mm a")} – {format(new Date(selectedSlot.end_time), "h:mm a")}
+                  {format(new Date(selectedSlot.start_time), "h:mm a")} –{" "}
+                  {format(new Date(selectedSlot.end_time), "h:mm a")}
                 </p>
               </div>
 
@@ -217,7 +266,7 @@ const SchoolProfile = () => {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Lesson (1 hr)</span>
-                  <span className="text-foreground">${school.hourly_rate}.00</span>
+                  <span className="text-foreground">${lowestPrice}.00</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Platform fee</span>
@@ -226,11 +275,10 @@ const SchoolProfile = () => {
                 <Separator />
                 <div className="flex justify-between font-heading font-semibold">
                   <span className="text-foreground">Total</span>
-                  <span className="text-foreground">${school.hourly_rate + PLATFORM_FEE}.00</span>
+                  <span className="text-foreground">${lowestPrice + PLATFORM_FEE}.00</span>
                 </div>
               </div>
 
-              {/* Stripe placeholder */}
               <div className="rounded-lg border-2 border-dashed border-border p-6 text-center">
                 <CreditCardIcon className="mx-auto h-8 w-8 text-muted-foreground" />
                 <p className="mt-2 text-sm text-muted-foreground">Stripe Payment Form</p>
@@ -238,7 +286,7 @@ const SchoolProfile = () => {
               </div>
 
               <Button className="w-full bg-accent text-accent-foreground hover:bg-orange-dark">
-                Confirm & Pay ${school.hourly_rate + PLATFORM_FEE}
+                Confirm & Pay ${lowestPrice + PLATFORM_FEE}
               </Button>
             </div>
           )}
