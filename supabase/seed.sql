@@ -7,61 +7,40 @@ DECLARE
   school2 uuid := gen_random_uuid();
   school3 uuid := gen_random_uuid();
   school4 uuid := gen_random_uuid();
-  school5 uuid := gen_random_uuid();
-  school6 uuid := gen_random_uuid();
-  school7 uuid := gen_random_uuid();
-  school8 uuid := gen_random_uuid();
 BEGIN
 
-  -- 1. Insert Schools
+  -- 1. Insert Schools (Real Smyrna & Cobb County Data)
   INSERT INTO public.schools (id, business_name, description, zip_code, dds_license_number, is_verified, rating, review_count) VALUES
-  (school1, 'Marietta Driving School', 'Serving the Marietta and Smyrna area for over 20 years with DDS certified instructors.', '30060', 'DDS-MD-1001', true, 4.8, 120),
-  (school2, 'A-1 Driving Clinic Smyrna', 'Specializing in Joshua''s Law 30/6 programs and defensive driving.', '30080', 'DDS-A1-2042', true, 4.6, 95),
-  (school3, 'Drive Smart Georgia (Marietta)', 'Tech-forward driving school using modern dual-control vehicles.', '30062', 'DDS-DS-505', true, 4.9, 310),
-  (school4, 'Smyrna Safe Driving Academy', 'Local Smyrna academy focused on teenage driving safety and adult beginners.', '30082', 'DDS-SDA-880', true, 4.5, 45),
-  (school5, 'Cobb County Driver Ed', 'Affordable driver education courses compliant with all state laws.', '30080', 'DDS-CC-911', true, 4.4, 60),
-  (school6, 'Georgia Driving Pros', 'Premier driving lessons for nervous adults and teens.', '30082', 'DDS-GDP-404', true, 4.7, 180),
-  (school7, 'Peach State Driving Academy (Marietta)', 'Top-rated classroom and behind-the-wheel combo packages.', '30067', 'DDS-PS-112', false, 4.3, 20),
-  (school8, 'East Cobb Driving Instruction', 'Dedicated instruction tailored to each student''s learning pace.', '30062', 'DDS-EC-303', true, 4.8, 200);
+  (school1, 'Taggart''s Driving School', 'Serving Metro Atlanta since 1957. State-Licensed Driver Education for Teens and Adults. Specializes in Joshua''s Law compliance.', '30080', 'DDS-TAG-1957', true, 4.8, 412),
+  (school2, 'A1 Driving School (Marietta)', 'Top-tier driving instruction in Marietta/Smyrna. Comprehensive Joshua''s Law bundles and defensive driving courses.', '30062', 'DDS-A1-2042', true, 4.7, 320),
+  (school3, 'Nathan''s Driving School', 'Licensed by the State of Georgia since 1986. We offer comprehensive pickup and drop-off services across Smyrna (30080/30082) for your convenience.', '30082', 'DDS-NAT-1986', true, 4.9, 510),
+  (school4, 'West Metro Driving School', 'Top-Rated Georgia Driving School Since 2007. Highly qualified, state-licensed instructors with one-on-one behind-the-wheel training.', '30132', 'DT-427', true, 4.8, 280);
 
   -- 2. Insert Instructors
   INSERT INTO public.instructors (school_id, name, dds_certification_number) VALUES
-  (school1, 'John Smith', 'INST-1001-A'),
-  (school1, 'Maria Gonzalez', 'INST-1001-B'),
-  (school2, 'Robert Johnson', 'INST-2042-C'),
-  (school3, 'Emily Davis', 'INST-505-A'),
-  (school3, 'Michael Brown', 'INST-505-B'),
-  (school4, 'Sarah Wilson', 'INST-880-A'),
-  (school5, 'David Lee', 'INST-911-A'),
-  (school6, 'Jessica Taylor', 'INST-404-A'),
-  (school7, 'Chris Anderson', 'INST-112-A'),
-  (school8, 'Pat Thomas', 'INST-303-A');
+  (school1, 'James Taggart', 'INST-TAG-A'),
+  (school1, 'Sarah Jenkins', 'INST-TAG-B'),
+  (school2, 'Robert Miller', 'INST-A1-A'),
+  (school3, 'Rachel Marie Lewit', 'INST-NAT-A'),
+  (school3, 'Jason Lewit', 'INST-NAT-B'),
+  (school4, 'Kyle Anderson', 'INST-WM-A');
 
   -- 3. Insert Packages (Joshua's Law 30/6 and 6-hour Behind The Wheel)
   INSERT INTO public.packages (school_id, title, description, type, hours_classroom, hours_behind_wheel, price) VALUES
-  -- School 1
-  (school1, 'Joshua''s Law 30/6 Complete Package', '30 hours of classroom instruction and 6 hours behind the wheel.', 'joshuas-law-30-6', 30, 6, 425.00),
-  (school1, '6-Hour Behind The Wheel Only', '6 hours of dedicated driving practice with a certified instructor.', 'behind-the-wheel', 0, 6, 320.00),
-  -- School 2
-  (school2, '30/6 Joshua''s Law Program', 'Meets all DDS requirements for teens.', 'joshuas-law-30-6', 30, 6, 395.00),
-  (school2, '6-Hour In-Car Training', 'Focused behind-the-wheel instruction.', 'behind-the-wheel', 0, 6, 290.00),
-  -- School 3
-  (school3, 'Premium 30/6 Driver Ed', 'High-tech classroom + 6 hours in our dual-control cars.', 'joshuas-law-30-6', 30, 6, 450.00),
-  (school3, '6 Hours Driving Instruction', 'Private driving lessons.', 'behind-the-wheel', 0, 6, 350.00),
-  -- School 4
-  (school4, 'Teen 30/6 Package', 'Comprehensive teen driving package.', 'joshuas-law-30-6', 30, 6, 375.00),
-  (school4, '6-Hour BTW Lessons', 'Standard driving practice package.', 'behind-the-wheel', 0, 6, 275.00),
-  -- School 5
-  (school5, 'Standard Joshua''s Law Course', 'State-approved 30/6 course.', 'joshuas-law-30-6', 30, 6, 350.00),
-  (school5, 'Basic 6-Hour Driving Package', 'Essential road practice.', 'behind-the-wheel', 0, 6, 250.00),
-  -- School 6
-  (school6, 'Joshua''s Law 30/6 Combo', '30 hours online/in-person + 6 hours driving.', 'joshuas-law-30-6', 30, 6, 410.00),
-  (school6, '6-Hour Road Ready Package', '6 hours behind the wheel.', 'behind-the-wheel', 0, 6, 310.00),
-  -- School 7
-  (school7, '30/6 Teen Driver Plan', 'Meets GA DDS standards.', 'joshuas-law-30-6', 30, 6, 399.00),
-  (school7, '6-Hour Behind the Wheel', 'Hands-on instruction.', 'behind-the-wheel', 0, 6, 299.00),
-  -- School 8
-  (school8, 'East Cobb 30/6 Program', 'Includes certificate for insurance discount.', 'joshuas-law-30-6', 30, 6, 440.00),
-  (school8, '6-Hour Driving Intensive', 'Fast-track behind the wheel training.', 'behind-the-wheel', 0, 6, 330.00);
+  -- Taggart's
+  (school1, 'Joshua''s Law 30/6 Complete Package', '30 hours of online/classroom instruction and 6 hours behind the wheel. Meets GA DDS requirements.', 'joshuas-law-30-6', 30, 6, 495.00),
+  (school1, '6-Hour Behind The Wheel', '6 hours of dedicated driving practice with a certified instructor.', 'behind-the-wheel', 0, 6, 340.00),
+  
+  -- A1 Driving School
+  (school2, '30/6 Joshua''s Law Bundle', 'Competitive Joshua''s Law program covering all DDS requirements for teens.', 'joshuas-law-30-6', 30, 6, 485.00),
+  (school2, '6-Hour In-Car Training', 'Focused behind-the-wheel instruction in dual-control vehicles.', 'behind-the-wheel', 0, 6, 330.00),
+  
+  -- Nathan's Driving School
+  (school3, 'Joshua''s Law 30/6 (With Pickup/Drop-off)', 'State-approved 30/6 course including convenient pickup and drop-off in Smyrna (30080/30082).', 'joshuas-law-30-6', 30, 6, 510.00),
+  (school3, '6-Hour Driving Package (Smyrna Pickup)', 'Essential road practice with door-to-door service in Cobb County.', 'behind-the-wheel', 0, 6, 360.00),
+  
+  -- West Metro Driving School
+  (school4, 'Joshua''s Law 30-Hour Online + 6-Hour BTW', 'Highly competitive online classroom and hands-on driving package. Free ADAP certificate included.', 'joshuas-law-30-6', 30, 6, 450.00),
+  (school4, '6-Hour Behind the Wheel Intensive', 'One-on-one training with detailed feedback and local at-home pickup.', 'behind-the-wheel', 0, 6, 320.00);
 
 END $$;
