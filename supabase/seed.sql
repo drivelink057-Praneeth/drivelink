@@ -1,96 +1,74 @@
--- seed.sql
-DO $$ 
-DECLARE
-  s_0 uuid := gen_random_uuid();
-  s_1 uuid := gen_random_uuid();
-  s_2 uuid := gen_random_uuid();
-  s_3 uuid := gen_random_uuid();
-  s_4 uuid := gen_random_uuid();
-  s_5 uuid := gen_random_uuid();
-  s_6 uuid := gen_random_uuid();
-  s_7 uuid := gen_random_uuid();
-  s_8 uuid := gen_random_uuid();
-  s_9 uuid := gen_random_uuid();
-  s_10 uuid := gen_random_uuid();
-  s_11 uuid := gen_random_uuid();
-  s_12 uuid := gen_random_uuid();
-  s_13 uuid := gen_random_uuid();
-  s_14 uuid := gen_random_uuid();
-  s_15 uuid := gen_random_uuid();
-BEGIN
+-- seed.sql (Flat inserts, no variables, safely parses in Supabase Editor)
 
-  -- 1. Insert Schools (Full List per requirements)
-  INSERT INTO public.schools (id, business_name, description, zip_code, is_verified, rating, review_count, phone) VALUES
-  (s_0, 'A1 Driving School (Marietta)', 'Price TBD', '30062', true, 4.8, 120, '(770) 962-9555'),
-  (s_1, 'Marietta Driving Academy', 'Price TBD - Fetch Failed (ENOTFOUND)', '30060', false, 4.8, 120, null),
-  (s_2, 'Newnan Driving School', 'Price TBD - Fetch Failed (ENOTFOUND)', '30067', false, 4.8, 120, null),
-  (s_3, 'Drive Smart Georgia (Alpharetta)', 'Verified', '30005', true, 4.8, 120, '770.232.0900'),
-  (s_4, 'NSH Driving Academy', 'Price TBD - Fetch Failed (ENOTFOUND)', '30004', false, 4.8, 120, null),
-  (s_5, 'All Star Driver Ed (Alpharetta)', 'Price TBD - Fetch Failed (ENOTFOUND)', '30022', false, 4.8, 120, null),
-  (s_6, '1 ACT Driving Schools (Lawrenceville)', 'Price TBD - Fetch Failed (404)', '30043', false, 4.8, 120, null),
-  (s_7, 'Jireh Driving School', 'Price TBD - Fetch Failed (ENOTFOUND)', '30046', false, 4.8, 120, null),
-  (s_8, 'Social Circle Driving School', 'Price TBD - Fetch Failed (ENOTFOUND)', '30044', false, 4.8, 120, null),
-  (s_9, 'A1 Driving School (Smyrna)', 'Price TBD - Fetch Failed (404)', '30080', false, 4.8, 120, null),
-  (s_10, 'South Cobb Driving School', 'Price TBD - Fetch Failed (ENOTFOUND)', '30082', false, 4.8, 120, null),
-  (s_11, 'Taggart''s Driving School', 'Verified from Phase 1', '30080', true, 4.8, 120, '(770) 934-2144'),
-  (s_12, 'Trillium Driving School', 'Price TBD - Requires Manual Verification', '30075', true, 4.8, 120, '(770) 685-1413'),
-  (s_13, 'Sandy Springs Driving School', 'Price TBD - Fetch Failed (ENOTFOUND)', '30328', false, 4.8, 120, null),
-  (s_14, 'West Metro Driving School', 'Verified from Phase 1', '30132', true, 4.8, 120, '(770) 443-1644'),
-  (s_15, 'Nathan''s Driving School', 'Verified from Phase 1', '30082', true, 4.8, 120, '(770) 454-9100');
+-- 1. Insert Schools
+INSERT INTO public.schools (id, business_name, description, zip_code, is_verified, rating, review_count, phone) VALUES
+('47b502c3-f0fd-46e7-8159-f5e3ee113a24', 'A1 Driving School (Marietta)', 'Price TBD', '30062', true, 4.8, 120, '(770) 962-9555'),
+('5f088f26-0e84-4b8c-bc7e-317a0d2fb46e', 'Marietta Driving Academy', 'Price TBD - Fetch Failed (ENOTFOUND)', '30060', false, 4.8, 120, null),
+('d3cd1750-b2ea-4325-9ee8-71870ceceaec', 'Newnan Driving School', 'Price TBD - Fetch Failed (ENOTFOUND)', '30067', false, 4.8, 120, null),
+('aee256f3-e728-431a-9591-4845a797860d', 'Drive Smart Georgia (Alpharetta)', 'Verified', '30005', true, 4.8, 120, '770.232.0900'),
+('a992a188-f454-452d-a606-ba66cd4a46dd', 'NSH Driving Academy', 'Price TBD - Fetch Failed (ENOTFOUND)', '30004', false, 4.8, 120, null),
+('3ab579bb-f4dc-46a5-8a9c-5c457904c291', 'All Star Driver Ed (Alpharetta)', 'Price TBD - Fetch Failed (ENOTFOUND)', '30022', false, 4.8, 120, null),
+('2d26b871-9d28-4884-892c-18410f1ea0d6', '1 ACT Driving Schools (Lawrenceville)', 'Price TBD - Fetch Failed (404)', '30043', false, 4.8, 120, null),
+('f254b947-accd-48b8-885a-79ed1a048d53', 'Jireh Driving School', 'Price TBD - Fetch Failed (ENOTFOUND)', '30046', false, 4.8, 120, null),
+('00d9ec3b-079e-4c61-9826-a885328b78fc', 'Social Circle Driving School', 'Price TBD - Fetch Failed (ENOTFOUND)', '30044', false, 4.8, 120, null),
+('2ebfcf92-b14a-4d06-b5e3-659feff8189f', 'A1 Driving School (Smyrna)', 'Price TBD - Fetch Failed (404)', '30080', false, 4.8, 120, null),
+('bb6d5518-3292-428d-b5c1-5193debe5478', 'South Cobb Driving School', 'Price TBD - Fetch Failed (ENOTFOUND)', '30082', false, 4.8, 120, null),
+('193acbe6-c17f-4307-9007-3c03688b17b8', 'Taggart''s Driving School', 'Verified from Phase 1', '30080', true, 4.8, 120, '(770) 934-2144'),
+('3c749c53-fa5a-40df-b190-d9f8e054c85f', 'Trillium Driving School', 'Price TBD - Requires Manual Verification', '30075', true, 4.8, 120, '(770) 685-1413'),
+('959bc509-3528-4275-886d-f5425ce5810b', 'Sandy Springs Driving School', 'Price TBD - Fetch Failed (ENOTFOUND)', '30328', false, 4.8, 120, null),
+('867d0bd1-e1b3-42cd-a436-ed7046b66f76', 'West Metro Driving School', 'Verified from Phase 1', '30132', true, 4.8, 120, '(770) 443-1644'),
+('3a7846fb-221a-4b3f-8662-5b9db55534e0', 'Nathan''s Driving School', 'Verified from Phase 1', '30082', true, 4.8, 120, '(770) 454-9100');
 
-  -- 2. Insert Packages (Joshua's Law 30/6)
-  INSERT INTO public.packages (school_id, title, description, type, hours_classroom, hours_behind_wheel, price) VALUES
-  (s_0, 'Joshua''s Law 30/6 Driver Ed', 'Price TBD', 'joshuas-law-30-6', 30, 6, 0.00),
-  (s_1, 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (ENOTFOUND)', 'joshuas-law-30-6', 30, 6, 0.00),
-  (s_2, 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (ENOTFOUND)', 'joshuas-law-30-6', 30, 6, 0.00),
-  (s_3, 'Joshua''s Law 30/6 Driver Ed', 'Verified', 'joshuas-law-30-6', 30, 6, 599.00),
-  (s_4, 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (ENOTFOUND)', 'joshuas-law-30-6', 30, 6, 0.00),
-  (s_5, 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (ENOTFOUND)', 'joshuas-law-30-6', 30, 6, 0.00),
-  (s_6, 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (404)', 'joshuas-law-30-6', 30, 6, 0.00),
-  (s_7, 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (ENOTFOUND)', 'joshuas-law-30-6', 30, 6, 0.00),
-  (s_8, 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (ENOTFOUND)', 'joshuas-law-30-6', 30, 6, 0.00),
-  (s_9, 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (404)', 'joshuas-law-30-6', 30, 6, 0.00),
-  (s_10, 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (ENOTFOUND)', 'joshuas-law-30-6', 30, 6, 0.00),
-  (s_11, 'Joshua''s Law 30/6 Driver Ed', 'Verified from Phase 1', 'joshuas-law-30-6', 30, 6, 495.00),
-  (s_12, 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Requires Manual Verification', 'joshuas-law-30-6', 30, 6, 0.00),
-  (s_13, 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (ENOTFOUND)', 'joshuas-law-30-6', 30, 6, 0.00),
-  (s_14, 'Joshua''s Law 30/6 Driver Ed', 'Verified from Phase 1', 'joshuas-law-30-6', 30, 6, 450.00),
-  (s_15, 'Joshua''s Law 30/6 Driver Ed', 'Verified from Phase 1', 'joshuas-law-30-6', 30, 6, 510.00);
+-- 2. Insert Packages
+INSERT INTO public.packages (school_id, title, description, type, hours_classroom, hours_behind_wheel, price) VALUES
+('47b502c3-f0fd-46e7-8159-f5e3ee113a24', 'Joshua''s Law 30/6 Driver Ed', 'Price TBD', 'joshuas-law-30-6', 30, 6, 0.00),
+('5f088f26-0e84-4b8c-bc7e-317a0d2fb46e', 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (ENOTFOUND)', 'joshuas-law-30-6', 30, 6, 0.00),
+('d3cd1750-b2ea-4325-9ee8-71870ceceaec', 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (ENOTFOUND)', 'joshuas-law-30-6', 30, 6, 0.00),
+('aee256f3-e728-431a-9591-4845a797860d', 'Joshua''s Law 30/6 Driver Ed', 'Verified', 'joshuas-law-30-6', 30, 6, 599.00),
+('a992a188-f454-452d-a606-ba66cd4a46dd', 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (ENOTFOUND)', 'joshuas-law-30-6', 30, 6, 0.00),
+('3ab579bb-f4dc-46a5-8a9c-5c457904c291', 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (ENOTFOUND)', 'joshuas-law-30-6', 30, 6, 0.00),
+('2d26b871-9d28-4884-892c-18410f1ea0d6', 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (404)', 'joshuas-law-30-6', 30, 6, 0.00),
+('f254b947-accd-48b8-885a-79ed1a048d53', 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (ENOTFOUND)', 'joshuas-law-30-6', 30, 6, 0.00),
+('00d9ec3b-079e-4c61-9826-a885328b78fc', 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (ENOTFOUND)', 'joshuas-law-30-6', 30, 6, 0.00),
+('2ebfcf92-b14a-4d06-b5e3-659feff8189f', 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (404)', 'joshuas-law-30-6', 30, 6, 0.00),
+('bb6d5518-3292-428d-b5c1-5193debe5478', 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (ENOTFOUND)', 'joshuas-law-30-6', 30, 6, 0.00),
+('193acbe6-c17f-4307-9007-3c03688b17b8', 'Joshua''s Law 30/6 Driver Ed', 'Verified from Phase 1', 'joshuas-law-30-6', 30, 6, 495.00),
+('3c749c53-fa5a-40df-b190-d9f8e054c85f', 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Requires Manual Verification', 'joshuas-law-30-6', 30, 6, 0.00),
+('959bc509-3528-4275-886d-f5425ce5810b', 'Joshua''s Law 30/6 Driver Ed', 'Price TBD - Fetch Failed (ENOTFOUND)', 'joshuas-law-30-6', 30, 6, 0.00),
+('867d0bd1-e1b3-42cd-a436-ed7046b66f76', 'Joshua''s Law 30/6 Driver Ed', 'Verified from Phase 1', 'joshuas-law-30-6', 30, 6, 450.00),
+('3a7846fb-221a-4b3f-8662-5b9db55534e0', 'Joshua''s Law 30/6 Driver Ed', 'Verified from Phase 1', 'joshuas-law-30-6', 30, 6, 510.00);
 
-
-  -- 3. Insert Instructors
-  INSERT INTO public.instructors (school_id, name, dds_certification_number) VALUES
-  (s_0, 'John Doe', 'INST-0-A'),
-  (s_0, 'Jane Smith', 'INST-0-B'),
-  (s_1, 'Michael Johnson', 'INST-1-A'),
-  (s_1, 'Emily Davis', 'INST-1-B'),
-  (s_2, 'Sarah Williams', 'INST-2-A'),
-  (s_2, 'David Brown', 'INST-2-B'),
-  (s_3, 'Daniel Miller', 'INST-3-A'),
-  (s_3, 'Jessica Wilson', 'INST-3-B'),
-  (s_4, 'Christopher Moore', 'INST-4-A'),
-  (s_4, 'Amanda Taylor', 'INST-4-B'),
-  (s_5, 'Matthew Anderson', 'INST-5-A'),
-  (s_5, 'Ashley Thomas', 'INST-5-B'),
-  (s_6, 'Robert White', 'INST-6-A'),
-  (s_6, 'Laura Harris', 'INST-6-B'),
-  (s_7, 'Kevin Clark', 'INST-7-A'),
-  (s_7, 'Melissa Lewis', 'INST-7-B'),
-  (s_8, 'Brian Walker', 'INST-8-A'),
-  (s_8, 'Rachel Hall', 'INST-8-B'),
-  (s_9, 'Steven Allen', 'INST-9-A'),
-  (s_9, 'Rebecca Young', 'INST-9-B'),
-  (s_10, 'Edward King', 'INST-10-A'),
-  (s_10, 'Michelle Wright', 'INST-10-B'),
-  (s_11, 'James Taggart', 'INST-11-A'),
-  (s_11, 'Sarah Jenkins', 'INST-11-B'),
-  (s_12, 'Thomas Green', 'INST-12-A'),
-  (s_12, 'Karen Adams', 'INST-12-B'),
-  (s_13, 'Charles Baker', 'INST-13-A'),
-  (s_13, 'Lisa Gonzalez', 'INST-13-B'),
-  (s_14, 'Kyle Anderson', 'INST-14-A'),
-  (s_14, 'Megan Nelson', 'INST-14-B'),
-  (s_15, 'Rachel Marie Lewit', 'INST-15-A'),
-  (s_15, 'Jason Lewit', 'INST-15-B');
-
-END $$;
+-- 3. Insert Instructors
+INSERT INTO public.instructors (school_id, name, dds_certification_number) VALUES
+('47b502c3-f0fd-46e7-8159-f5e3ee113a24', 'John Doe', 'INST-0-A'),
+('47b502c3-f0fd-46e7-8159-f5e3ee113a24', 'Jane Smith', 'INST-0-B'),
+('5f088f26-0e84-4b8c-bc7e-317a0d2fb46e', 'Michael Johnson', 'INST-1-A'),
+('5f088f26-0e84-4b8c-bc7e-317a0d2fb46e', 'Emily Davis', 'INST-1-B'),
+('d3cd1750-b2ea-4325-9ee8-71870ceceaec', 'Sarah Williams', 'INST-2-A'),
+('d3cd1750-b2ea-4325-9ee8-71870ceceaec', 'David Brown', 'INST-2-B'),
+('aee256f3-e728-431a-9591-4845a797860d', 'Daniel Miller', 'INST-3-A'),
+('aee256f3-e728-431a-9591-4845a797860d', 'Jessica Wilson', 'INST-3-B'),
+('a992a188-f454-452d-a606-ba66cd4a46dd', 'Christopher Moore', 'INST-4-A'),
+('a992a188-f454-452d-a606-ba66cd4a46dd', 'Amanda Taylor', 'INST-4-B'),
+('3ab579bb-f4dc-46a5-8a9c-5c457904c291', 'Matthew Anderson', 'INST-5-A'),
+('3ab579bb-f4dc-46a5-8a9c-5c457904c291', 'Ashley Thomas', 'INST-5-B'),
+('2d26b871-9d28-4884-892c-18410f1ea0d6', 'Robert White', 'INST-6-A'),
+('2d26b871-9d28-4884-892c-18410f1ea0d6', 'Laura Harris', 'INST-6-B'),
+('f254b947-accd-48b8-885a-79ed1a048d53', 'Kevin Clark', 'INST-7-A'),
+('f254b947-accd-48b8-885a-79ed1a048d53', 'Melissa Lewis', 'INST-7-B'),
+('00d9ec3b-079e-4c61-9826-a885328b78fc', 'Brian Walker', 'INST-8-A'),
+('00d9ec3b-079e-4c61-9826-a885328b78fc', 'Rachel Hall', 'INST-8-B'),
+('2ebfcf92-b14a-4d06-b5e3-659feff8189f', 'Steven Allen', 'INST-9-A'),
+('2ebfcf92-b14a-4d06-b5e3-659feff8189f', 'Rebecca Young', 'INST-9-B'),
+('bb6d5518-3292-428d-b5c1-5193debe5478', 'Edward King', 'INST-10-A'),
+('bb6d5518-3292-428d-b5c1-5193debe5478', 'Michelle Wright', 'INST-10-B'),
+('193acbe6-c17f-4307-9007-3c03688b17b8', 'James Taggart', 'INST-11-A'),
+('193acbe6-c17f-4307-9007-3c03688b17b8', 'Sarah Jenkins', 'INST-11-B'),
+('3c749c53-fa5a-40df-b190-d9f8e054c85f', 'Thomas Green', 'INST-12-A'),
+('3c749c53-fa5a-40df-b190-d9f8e054c85f', 'Karen Adams', 'INST-12-B'),
+('959bc509-3528-4275-886d-f5425ce5810b', 'Charles Baker', 'INST-13-A'),
+('959bc509-3528-4275-886d-f5425ce5810b', 'Lisa Gonzalez', 'INST-13-B'),
+('867d0bd1-e1b3-42cd-a436-ed7046b66f76', 'Kyle Anderson', 'INST-14-A'),
+('867d0bd1-e1b3-42cd-a436-ed7046b66f76', 'Megan Nelson', 'INST-14-B'),
+('3a7846fb-221a-4b3f-8662-5b9db55534e0', 'Rachel Marie Lewit', 'INST-15-A'),
+('3a7846fb-221a-4b3f-8662-5b9db55534e0', 'Jason Lewit', 'INST-15-B');
