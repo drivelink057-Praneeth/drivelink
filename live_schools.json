@@ -1,0 +1,38 @@
+[
+  {
+    "title": "Driversed",
+    "url": "https://mariettacommunityschool.ce.eleyo.com/driversed",
+    "phone": "(770) 429-3170",
+    "price": "$549",
+    "zip": "30152",
+    "status": "success",
+    "city": "Marietta"
+  },
+  {
+    "title": "Teen Driver Ed",
+    "url": "https://www.greenlightdrivers.com/teen-driver-ed.phtml",
+    "phone": "(770) 685-1600",
+    "price": "$490",
+    "zip": "30004",
+    "status": "success",
+    "city": "Alpharetta"
+  },
+  {
+    "title": "Atlanta Driver’s Education Classes – Joshua’s Law – A",
+    "url": "https://a1drivingschools.com/drivers-education/atlanta-drivers-education-classes-joshuas-law/",
+    "phone": "(770) 962-9555",
+    "price": "$555",
+    "zip": "30004",
+    "status": "success",
+    "city": "Alpharetta"
+  },
+  {
+    "title": "Driving School Alpharetta",
+    "url": "https://drivesmartgeorgia.com/alpharetta/",
+    "phone": "770.232.0900",
+    "price": "$599",
+    "zip": "30041",
+    "status": "success",
+    "city": "Alpharetta"
+  }
+]
