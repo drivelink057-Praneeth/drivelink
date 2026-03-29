@@ -1,0 +1,111 @@
+[
+  {
+    "url": "https://www.a1drivingschools.com/marietta/",
+    "phone": "(770) 962-9555",
+    "price": null,
+    "zip": "30067",
+    "status": "success"
+  },
+  {
+    "url": "https://www.mariettadrivingacademy.com/",
+    "phone": null,
+    "price": null,
+    "zip": null,
+    "status": "failed",
+    "error": "request to https://www.mariettadrivingacademy.com/ failed, reason: getaddrinfo ENOTFOUND www.mariettadrivingacademy.com"
+  },
+  {
+    "url": "https://www.newnan-driving.com/",
+    "phone": null,
+    "price": null,
+    "zip": null,
+    "status": "failed",
+    "error": "request to https://www.newnan-driving.com/ failed, reason: getaddrinfo ENOTFOUND www.newnan-driving.com"
+  },
+  {
+    "url": "https://drivesmartgeorgia.com/alpharetta/",
+    "phone": "770.232.0900",
+    "price": "$599",
+    "zip": "30041",
+    "status": "success"
+  },
+  {
+    "url": "https://www.nshdrivingacademy.com/",
+    "phone": null,
+    "price": null,
+    "zip": null,
+    "status": "failed",
+    "error": "request to https://www.nshdrivingacademy.com/ failed, reason: getaddrinfo ENOTFOUND www.nshdrivingacademy.com"
+  },
+  {
+    "url": "https://www.allstardrivered.com/georgia/alpharetta/",
+    "phone": null,
+    "price": null,
+    "zip": null,
+    "status": "failed",
+    "error": "request to https://www.allstardrivered.com/georgia/alpharetta/ failed, reason: getaddrinfo ENOTFOUND www.allstardrivered.com"
+  },
+  {
+    "url": "https://1actdrivingschools.com/lawrenceville/",
+    "phone": null,
+    "price": null,
+    "zip": null,
+    "status": "failed",
+    "error": "HTTP Error: 404"
+  },
+  {
+    "url": "https://www.jirehdrivingschool.com/",
+    "phone": null,
+    "price": null,
+    "zip": null,
+    "status": "failed",
+    "error": "request to https://www.jirehdrivingschool.com/ failed, reason: getaddrinfo ENOTFOUND www.jirehdrivingschool.com"
+  },
+  {
+    "url": "https://www.socialcircledrivingschool.com/",
+    "phone": null,
+    "price": null,
+    "zip": null,
+    "status": "failed",
+    "error": "request to https://www.socialcircledrivingschool.com/ failed, reason: getaddrinfo ENOTFOUND www.socialcircledrivingschool.com"
+  },
+  {
+    "url": "https://www.a1drivingschools.com/smyrna/",
+    "phone": null,
+    "price": null,
+    "zip": null,
+    "status": "failed",
+    "error": "HTTP Error: 404"
+  },
+  {
+    "url": "https://www.southcobbdrivingschool.com/",
+    "phone": null,
+    "price": null,
+    "zip": null,
+    "status": "failed",
+    "error": "request to https://www.southcobbdrivingschool.com/ failed, reason: getaddrinfo ENOTFOUND www.southcobbdrivingschool.com"
+  },
+  {
+    "url": "https://taggartsdrivingschool.com/",
+    "phone": null,
+    "price": null,
+    "zip": null,
+    "status": "failed",
+    "error": "HTTP Error: 403"
+  },
+  {
+    "url": "https://trilliumdrivingschool.com/",
+    "phone": "770-685-1413",
+    "price": null,
+    "zip": "30075",
+    "status": "success"
+  },
+  {
+    "url": "https://www.sandyspringsdrivingschool.com/",
+    "phone": null,
+    "price": null,
+    "zip": null,
+    "status": "failed",
+    "error": "request to https://www.sandyspringsdrivingschool.com/ failed, reason: getaddrinfo ENOTFOUND www.sandyspringsdrivingschool.com"
+  }
+]
