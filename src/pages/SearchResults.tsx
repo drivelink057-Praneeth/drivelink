@@ -1,39 +1,55 @@
 import { useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import { SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SchoolCard from "@/components/SchoolCard";
-import { mockSchools } from "@/data/mockData";
+import { useSchools, useAllPackages } from "@/hooks/useSchools";
 
 const SearchResults = () => {
   const [searchParams] = useSearchParams();
   const initialZip = searchParams.get("zip") || "30080";
   const [zip, setZip] = useState(initialZip);
   const [priceMax, setPriceMax] = useState("all");
-  const [lessonType, setLessonType] = useState<string[]>([]);
-  const [carType, setCarType] = useState("all");
+  const [pickupOnly, setPickupOnly] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
+  const { data: schools = [], isLoading: loadingSchools } = useSchools();
+  const { data: allPackages = [], isLoading: loadingPkgs } = useAllPackages();
+
+  // Build a map of school_id → lowest price
+  const lowestPriceMap = useMemo(() => {
+    const map: Record<string, number> = {};
+    for (const pkg of allPackages) {
+      if (!(pkg.school_id in map) || pkg.price < map[pkg.school_id]) {
+        map[pkg.school_id] = pkg.price;
+      }
+    }
+    return map;
+  }, [allPackages]);
+
   const filtered = useMemo(() => {
-    return mockSchools.filter((s) => {
-      if (priceMax !== "all" && s.hourly_rate > parseInt(priceMax)) return false;
-      if (lessonType.length > 0 && !lessonType.some((t) => s.lesson_types.includes(t as 'teen' | 'adult'))) return false;
-      if (carType !== "all" && s.car_type !== carType) return false;
+    return schools.filter((s) => {
+      if (zip && s.zip_code !== zip) return false;
+      if (priceMax !== "all") {
+        const lowest = lowestPriceMap[s.id];
+        if (lowest != null && lowest > parseInt(priceMax)) return false;
+      }
+      if (pickupOnly) {
+        const d = (s.description ?? "").toLowerCase();
+        const has = d.includes("pickup") || d.includes("pick-up") || d.includes("drop-off") || d.includes("dropoff");
+        if (!has) return false;
+      }
       return true;
     });
-  }, [priceMax, lessonType, carType]);
+  }, [schools, zip, priceMax, pickupOnly, lowestPriceMap]);
 
-  const toggleLesson = (type: string) => {
-    setLessonType((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
-    );
-  };
+  const isLoading = loadingSchools || loadingPkgs;
 
   const FilterPanel = () => (
     <div className="space-y-6">
@@ -45,40 +61,24 @@ const SearchResults = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Any price</SelectItem>
-            <SelectItem value="75">Under $75/hr</SelectItem>
-            <SelectItem value="100">Under $100/hr</SelectItem>
-            <SelectItem value="150">Under $150/hr</SelectItem>
+            <SelectItem value="300">Under $300</SelectItem>
+            <SelectItem value="500">Under $500</SelectItem>
+            <SelectItem value="750">Under $750</SelectItem>
           </SelectContent>
         </Select>
       </div>
       <div>
-        <Label className="font-heading text-sm font-semibold">Lesson Type</Label>
+        <Label className="font-heading text-sm font-semibold">Features</Label>
         <div className="mt-2 space-y-2">
-          {["teen", "adult"].map((type) => (
-            <div key={type} className="flex items-center gap-2">
-              <Checkbox
-                id={type}
-                checked={lessonType.includes(type)}
-                onCheckedChange={() => toggleLesson(type)}
-              />
-              <label htmlFor={type} className="text-sm capitalize">{type} Lessons</label>
-            </div>
-          ))}
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="pickup"
+              checked={pickupOnly}
+              onCheckedChange={(v) => setPickupOnly(!!v)}
+            />
+            <label htmlFor="pickup" className="text-sm">Pickup / Drop-off</label>
+          </div>
         </div>
-      </div>
-      <div>
-        <Label className="font-heading text-sm font-semibold">Vehicle Type</Label>
-        <Select value={carType} onValueChange={setCarType}>
-          <SelectTrigger className="mt-2">
-            <SelectValue placeholder="Any vehicle" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Any vehicle</SelectItem>
-            <SelectItem value="sedan">Sedan</SelectItem>
-            <SelectItem value="suv">SUV</SelectItem>
-            <SelectItem value="dual-control">Dual Control</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
     </div>
   );
@@ -94,7 +94,7 @@ const SearchResults = () => {
                 Driving Schools near {zip}
               </h1>
               <p className="text-sm text-muted-foreground">
-                {filtered.length} school{filtered.length !== 1 ? "s" : ""} found
+                {isLoading ? "Loading…" : `${filtered.length} school${filtered.length !== 1 ? "s" : ""} found`}
               </p>
             </div>
             <div className="flex gap-2">
@@ -143,14 +143,24 @@ const SearchResults = () => {
 
             {/* Results */}
             <div className="flex-1">
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
-                {filtered.map((school, i) => (
-                  <SchoolCard key={school.id} school={school} index={i} />
-                ))}
-              </div>
-              {filtered.length === 0 && (
+              {isLoading ? (
+                <div className="flex items-center justify-center py-20">
+                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                </div>
+              ) : filtered.length === 0 ? (
                 <div className="py-20 text-center text-muted-foreground">
                   No schools match your filters. Try adjusting your criteria.
+                </div>
+              ) : (
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
+                  {filtered.map((school, i) => (
+                    <SchoolCard
+                      key={school.id}
+                      school={school}
+                      lowestPrice={lowestPriceMap[school.id]}
+                      index={i}
+                    />
+                  ))}
                 </div>
               )}
             </div>
